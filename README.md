@@ -53,8 +53,6 @@ then drag and drop the .mp4 or .gif directly into the GitHub repository issue/re
   * **Kitty Terminal** color palette
   * **KDE Dolphin** file manager (`Noctalia.colors`)
   * **GTK 3 / 4** applications
-  * **Btop** resource monitor
-  * **Yazi** terminal file manager
 
 ### 🌐 4. Zero-Crop Chrome New Tab Background
 * Mathematical zero-crop technique: Formatted 16:10 artwork (`wallhaven-gp51xq`) to fit standard 16:9 viewports (1600×900) using ambient Gaussian-blurred edge expansion, preventing Chrome from cutting off character heads or phones.
