@@ -1,0 +1,10 @@
+[daemon]
+parallax_intensity = 0.004
+cursor_poll_hz = 60
+
+[inference]
+model_path = "/home/lawrencetan/.local/share/shiftpaper/models/moge-2-vitb/model.onnx"
+
+[wallpaper]
+color = "/home/lawrencetan/.cache/shiftpaper/wallpapers/d39d9b7081d2a303edc134ba712dca5bbca3819d7213ac9fbe81efeda8e021f6.color.png"
+depth = "/home/lawrencetan/.cache/shiftpaper/wallpapers/d39d9b7081d2a303edc134ba712dca5bbca3819d7213ac9fbe81efeda8e021f6.depth16.png"

@@ -1,0 +1,15 @@
+# --- Noctalia Theme Integration ---
+
+# --- Transparency Settings ---
+# 1.0 is solid black, 0.0 is completely invisible. 
+# 0.85 to 0.90 is the "sweet spot" for readability with a slight glass effect.
+background_opacity 0.7
+
+# Optional: Blurs the background behind the terminal (works great on Niri/Wayland)
+background_blur 1
+
+
+# BEGIN_KITTY_THEME
+# Noctalia
+include current-theme.conf
+# END_KITTY_THEME
