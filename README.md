@@ -1,137 +1,77 @@
-<div align="center">
+# 3D Spatial Parallax Wallpaper Setup for Wayland
 
-# ⛩️ CachyOS + Niri + Noctalia Rice
-### *Atmospheric Dark Fantasy Desktop featuring 3D Spatial Parallax & Responsive Terminal Stickers*
-
-![OS](https://img.shields.io/badge/OS-CachyOS%20Linux-blue?style=for-the-badge&logo=archlinux)
-![Compositor](https://img.shields.io/badge/Compositor-Niri%20Scrollable-teal?style=for-the-badge)
-![Shell](https://img.shields.io/badge/Desktop-Noctalia%20Shell-purple?style=for-the-badge)
-![Terminal](https://img.shields.io/badge/Terminal-Kitty-green?style=for-the-badge&logo=kitty)
-![Font](https://img.shields.io/badge/Font-JetBrains%20Mono%20Nerd-orange?style=for-the-badge)
-
-</div>
+Interactive 3D spatial mouse-tilt wallpaper setup for any Wayland compositor supporting wlr-layer-shell (Niri, Hyprland, Sway, River, Wayfire, Labwc).
 
 ---
 
-## 🎬 Showcase
+## Overview
 
-<!-- 
-TIP: Drop your showcase video or GIF here!
-You can record your screen with `gpu-screen-recorder` or Noctalia's top-bar screen recorder,
-then drag and drop the .mp4 or .gif directly into the GitHub repository issue/release/assets!
--->
+This setup uses [shiftpaper](https://github.com/CPritch/shiftpaper) powered by the MoGe-2 depth estimation model to generate metric 3D depth maps for wallpapers. As you move your mouse cursor across the desktop, the background tilts in perspective real-time (60 FPS) with low resource overhead.
 
-<div align="center">
-  <img src="assets/showcase/demo.gif" alt="Showcase Preview" width="850px" />
-  <p><i>3D Spatial Mouse Parallax Wallpaper in action alongside responsive Fastfetch stickers & Noctalia widgets.</i></p>
-</div>
+### Key Features
+* Universal Wayland support across any window manager or desktop shell.
+* Automatic screen resolution detection and Lanczos scaling (no image distortion).
+* Tuned parallax intensity (0.004) preventing edge-stretching artifacts while preserving depth.
+* Lightweight systemd user service integration (`shiftpaperd.service`).
 
 ---
 
-## ✨ Features & Highlights
+## Dependencies
 
-### 🌌 1. 3D Spatial Mouse Parallax Wallpaper
-* **Engine:** Powered by [`shiftpaper`](https://github.com/CPritch/shiftpaper) with **MoGe-2** metric depth estimation.
-* **Smooth Camera Projection:** Tuned `parallax_intensity = 0.004` in `config.toml` for realistic, responsive 3D perspective camera tilting without blurry edge-stretching artifacts.
-* **Low Overhead:** Lightweight OpenGL/Vulkan rendering on Wayland `wlr-layer-shell`.
-
-### 🐱 2. Dynamic Responsive Fastfetch Stickers
-* **Width-Aware Fish Wrapper:** Built-in terminal width detection (`tput cols`) in `~/.config/fish/config.fish`.
-  * **Half-Screen / Tiled (< 90 cols):** Automatically renders a compact, clean ASCII CachyOS logo.
-  * **Full-Screen / Wide (≥ 90 cols):** Automatically renders high-resolution transparent GUWEIZ character stickers with Kitty icat graphics protocol.
-* **Intelligent Dual-GPU Labeling:** Differentiates Intel Integrated GPU as **`iGPU`** and dedicated GTX graphics as **`GPU`**.
-
-### 🎨 3. Noctalia Desktop Shell & Widget Dashboard
-* **Balanced Composition:** Desktop widgets are thoughtfully arranged on the open left side, keeping the character on the right completely unblocked:
-  * **Top-Left:** Minimalist digital Clock & Date header.
-  * **Top-Center-Left:** Compact Weather card.
-  * **Mid-Left:** System CPU gauge & responsive horizontal Audio Spectrum Visualizer.
-  * **Bottom-Left:** Calendar block.
-  * **Center:** Fancy circular glowing bloom visualizer floating into the mist.
-* **Unified Theme Sync:** Noctalia dynamically extracts color palettes from the active wallpaper and synchronizes them across:
-  * **Niri** active border glows (`#a2c9fe`)
-  * **Kitty Terminal** color palette
-  * **KDE Dolphin** file manager (`Noctalia.colors`)
-  * **GTK 3 / 4** applications
-
-### 🌐 4. Zero-Crop Chrome New Tab Background
-* Mathematical zero-crop technique: Formatted 16:10 artwork (`wallhaven-gp51xq`) to fit standard 16:9 viewports (1600×900) using ambient Gaussian-blurred edge expansion, preventing Chrome from cutting off character heads or phones.
+* shiftpaper (AUR: `shiftpaper` or `shiftpaper-git`)
+* python
+* python-pillow (for auto-scaling wallpapers to screen resolution)
 
 ---
 
-## 🛠️ Software Stack
-
-| Component | Software |
-| :--- | :--- |
-| **Operating System** | [CachyOS Linux](https://cachyos.org/) (Kernel 7.3+ / Arch based) |
-| **Compositor** | [Niri](https://github.com/YaLTeR/niri) (Scrollable tiling Wayland compositor) |
-| **Desktop Shell** | [Noctalia](https://github.com/noctalia-dev/noctalia) (Quickshell-based desktop shell) |
-| **Wallpaper Parallax** | [Shiftpaper](https://github.com/CPritch/shiftpaper) (`shiftpaperd`) |
-| **Terminal** | [Kitty](https://sw.kovidgoyal.net/kitty/) |
-| **Shell** | [Fish Shell](https://fishshell.com/) |
-| **System Fetch** | [Fastfetch](https://github.com/fastfetch-cli/fastfetch) |
-| **File Managers** | Dolphin (GUI) / Yazi (TUI) |
-| **System Monitor** | Btop |
-| **Typography** | JetBrains Mono Nerd Font |
-| **Cursor Theme** | Bibata Modern Classic (24px) |
-
----
-
-## 📥 Installation
+## Installation
 
 ```bash
-# 1. Clone your dotfiles repository
 git clone https://github.com/LawrenceTanny/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-
-# 2. Run the installer script
 chmod +x install.sh
 ./install.sh
 ```
 
+The installer will:
+1. Detect your active monitor resolution.
+2. Check dependencies and prompt to install missing packages via paru/yay/pacman.
+3. Present available wallpapers and automatically scale the selected image to your resolution.
+4. Apply the tuned parallax intensity configuration (`0.004`) to `~/.config/shiftpaper/config.toml`.
+5. Bake the 3D depth map and enable `shiftpaperd.service`.
+
 ---
 
-## 📹 How to Record Your Showcase Video
+## Manual Usage
 
-You have `gpu-screen-recorder` and `ffmpeg` already installed on CachyOS!
+To change wallpaper manually with shiftpaper:
 
-### Option A: Via Noctalia Top Bar
-1. Click the **Screen Recorder** icon in the Noctalia top bar (or trigger via Control Center).
-2. It immediately captures smooth 60 FPS video directly to `~/Videos/Recordings/`.
-3. Left-click the recorder icon again to stop recording.
-
-### Option B: High-FPS Command Line Recording
 ```bash
-# Record 60 FPS Wayland desktop capture
-gpu-screen-recorder -w screen -f 60 -a default_output -o ~/Videos/showcase.mp4
-# (Press Ctrl+C in terminal when finished recording)
+shiftpaper set /path/to/your/image.png
 ```
 
-### Option C: Convert Video to an Optimized Showcase GIF for GitHub
+To adjust 3D tilt strength, edit `~/.config/shiftpaper/config.toml`:
+
+```toml
+[daemon]
+parallax_intensity = 0.004
+cursor_poll_hz = 60
+```
+
+Then reload the daemon:
+
 ```bash
-ffmpeg -i ~/Videos/showcase.mp4 -vf "fps=20,scale=960:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ~/dotfiles/assets/showcase/demo.gif
+pkill -HUP shiftpaperd
 ```
 
 ---
 
-## 🎨 Special Thanks & Artwork Credits
+## Special Thanks and Artwork Credits
 
-A massive thank you and deep appreciation to **Zheng Wei Gu ([GUWEIZ](https://www.artstation.com/guweiz))** for creating the extraordinary, atmospheric dark fantasy and urban anime artwork that inspires the wallpaper, visual theme, and terminal stickers in this rice. 
+Artwork by Zheng Wei Gu (GUWEIZ). Please support the original artist:
 
-Please support the original artist across their platforms:
-
-* 🎨 **ArtStation:** [artstation.com/guweiz](https://www.artstation.com/guweiz)
-* 🐦 **X (Twitter):** [@ttguweiz](https://x.com/ttguweiz)
-* 📸 **Instagram:** [@guweiz](https://www.instagram.com/guweiz/)
-* 💖 **Patreon:** [patreon.com/guweiz](https://www.patreon.com/guweiz)
-* 🎬 **YouTube:** [@GUWEIZ](https://www.youtube.com/@GUWEIZ)
-
----
-
-## 📜 System & Open Source Credits
-* [CachyOS Team](https://cachyos.org/) for the blazing-fast kernel and Wayland gaming distribution.
-* [Niri](https://github.com/YaLTeR/niri) for the innovative scrollable tiling Wayland compositor.
-* [Noctalia](https://github.com/noctalia-dev/noctalia) for the versatile Quickshell-based desktop shell.
-* [Shiftpaper](https://github.com/CPritch/shiftpaper) by CPritch for the 3D depth-map parallax daemon.
-* [Wallhaven](https://wallhaven.cc/) community for high-resolution wallpaper curation.
-
+* ArtStation: https://www.artstation.com/guweiz
+* X (Twitter): https://x.com/ttguweiz
+* Instagram: https://www.instagram.com/guweiz/
+* Patreon: https://www.patreon.com/guweiz
+* YouTube: https://www.youtube.com/@GUWEIZ
