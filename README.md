@@ -114,9 +114,24 @@ ffmpeg -i ~/Videos/showcase.mp4 -vf "fps=20,scale=960:-1:flags=lanczos,split[s0]
 
 ---
 
-## 📜 Credits & Acknowledgments
-* Artworks by **[GUWEIZ](https://www.artstation.com/guweiz)** via [Wallhaven](https://wallhaven.cc/).
+## 🎨 Special Thanks & Artwork Credits
+
+A massive thank you and deep appreciation to **Zheng Wei Gu ([GUWEIZ](https://www.artstation.com/guweiz))** for creating the extraordinary, atmospheric dark fantasy and urban anime artwork that inspires the wallpaper, visual theme, and terminal stickers in this rice. 
+
+Please support the original artist across their platforms:
+
+* 🎨 **ArtStation:** [artstation.com/guweiz](https://www.artstation.com/guweiz)
+* 🐦 **X (Twitter):** [@ttguweiz](https://x.com/ttguweiz)
+* 📸 **Instagram:** [@guweiz](https://www.instagram.com/guweiz/)
+* 💖 **Patreon:** [patreon.com/guweiz](https://www.patreon.com/guweiz)
+* 🎬 **YouTube:** [@GUWEIZ](https://www.youtube.com/@GUWEIZ)
+
+---
+
+## 📜 System & Open Source Credits
 * [CachyOS Team](https://cachyos.org/) for the blazing-fast kernel and Wayland gaming distribution.
-* [Niri](https://github.com/YaLTeR/niri) for the smooth scrollable tiling compositor.
-* [Noctalia](https://github.com/noctalia-dev/noctalia) for the versatile Quickshell desktop environment.
-* [Shiftpaper](https://github.com/CPritch/shiftpaper) for the 3D depth-map parallax daemon.
+* [Niri](https://github.com/YaLTeR/niri) for the innovative scrollable tiling Wayland compositor.
+* [Noctalia](https://github.com/noctalia-dev/noctalia) for the versatile Quickshell-based desktop shell.
+* [Shiftpaper](https://github.com/CPritch/shiftpaper) by CPritch for the 3D depth-map parallax daemon.
+* [Wallhaven](https://wallhaven.cc/) community for high-resolution wallpaper curation.
+
