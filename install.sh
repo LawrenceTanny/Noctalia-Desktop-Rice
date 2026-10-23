@@ -12,7 +12,7 @@ NC='\033[0m'
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DATE="$(date +%Y%m%d_%H%M%S)"
 
-clear
+clear 2>/dev/null || true
 echo -e "${CYAN}${BOLD}CachyOS + Niri + Noctalia Rice Installer${NC}\n"
 
 detect_compositor() {
