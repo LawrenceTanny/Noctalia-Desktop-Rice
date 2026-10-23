@@ -2,7 +2,7 @@ source /usr/share/cachyos-fish-config/cachyos-config.fish
 
 # --- Responsive Fastfetch (Auto-scales for half-screen & full-screen) ---
 function fastfetch
-    set -l imgs (find /home/lawrencetan/Pictures/Fastfetch -maxdepth 1 -name "*.png" 2>/dev/null)
+    set -l imgs (find $HOME/Pictures/Fastfetch -maxdepth 1 -name "*.png" 2>/dev/null)
     set -l has_img (count $imgs)
     
     # Check terminal width (half-screen vs full-screen)
@@ -36,7 +36,7 @@ alias eagle="QT_QPA_PLATFORM=xcb /usr/bin/eagle"
 alias Eagle="QT_QPA_PLATFORM=xcb /usr/bin/eagle"
 
 # Added by Antigravity CLI installer
-set -gx PATH "/home/lawrencetan/.local/bin" $PATH
+set -gx PATH "$HOME/.local/bin" $PATH
 
 function vivado
     bash -c "source ~/Downloads/SCHOOL/2026.1/Vivado/settings64.sh && export _JAVA_AWT_WM_NONREPARENTING=1 && vivado"
