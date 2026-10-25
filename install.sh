@@ -26,30 +26,57 @@ is_windows() {
     esac
 }
 
-scale_image_python() {
+scale_image() {
     local src="$1"
     local tw="$2"
     local th="$3"
     local out="$4"
-    python3 -c "
+
+    if python3 -c "import PIL" &>/dev/null; then
+        python3 -c "
 import sys
 from PIL import Image
-
-src = sys.argv[1]
-tw = int(sys.argv[2])
-th = int(sys.argv[3])
-out = sys.argv[4]
-
+src, tw, th, out = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
 im = Image.open(src)
 scale = max(tw / im.width, th / im.height)
-nw = int(round(im.width * scale))
-nh = int(round(im.height * scale))
-
+nw, nh = int(round(im.width * scale)), int(round(im.height * scale))
 res = im.resize((nw, nh), Image.Resampling.LANCZOS)
-x0 = (nw - tw) // 2
-y0 = (nh - th) // 2
+x0, y0 = (nw - tw) // 2, (nh - th) // 2
 res.crop((x0, y0, x0 + tw, y0 + th)).save(out, format='PNG')
 " "$src" "$tw" "$th" "$out"
+    elif python -c "import PIL" &>/dev/null; then
+        python -c "
+import sys
+from PIL import Image
+src, tw, th, out = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
+im = Image.open(src)
+scale = max(tw / im.width, th / im.height)
+nw, nh = int(round(im.width * scale)), int(round(im.height * scale))
+res = im.resize((nw, nh), Image.Resampling.LANCZOS)
+x0, y0 = (nw - tw) // 2, (nh - th) // 2
+res.crop((x0, y0, x0 + tw, y0 + th)).save(out, format='PNG')
+" "$src" "$tw" "$th" "$out"
+    elif command -v powershell.exe &>/dev/null; then
+        powershell.exe -NoProfile -Command "
+            Add-Type -AssemblyName System.Drawing
+            \$src = [System.Drawing.Image]::FromFile('$src')
+            \$bmp = New-Object System.Drawing.Bitmap($tw, $th)
+            \$g = [System.Drawing.Graphics]::FromImage(\$bmp)
+            \$g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+            \$scale = [Math]::Max($tw / \$src.Width, $th / \$src.Height)
+            \$nw = [int][Math]::Round(\$src.Width * \$scale)
+            \$nh = [int][Math]::Round(\$src.Height * \$scale)
+            \$x0 = [int](($tw - \$nw) / 2)
+            \$y0 = [int](($th - \$nh) / 2)
+            \$g.DrawImage(\$src, \$x0, \$y0, \$nw, \$nh)
+            \$bmp.Save('$out', [System.Drawing.Imaging.ImageFormat]::Png)
+            \$src.Dispose()
+            \$g.Dispose()
+            \$bmp.Dispose()
+        " 2>/dev/null || cp -f "$src" "$out"
+    else
+        cp -f "$src" "$out"
+    fi
 }
 
 if is_windows; then
@@ -113,12 +140,12 @@ if is_windows; then
         BUNDLE_DIR="$DOTFILES_DIR/assets/lively-parallax"
         mkdir -p "$BUNDLE_DIR"
 
-        echo -e "\n${CYAN}Scaling chosen wallpaper to $WIN_RES...${NC}"
-        scale_image_python "$CHOSEN_WALLPAPER" "$TARGET_W" "$TARGET_H" "$BUNDLE_DIR/wallpaper.png"
+        echo -e "\n${CYAN}Preparing $(basename "$CHOSEN_WALLPAPER") for $WIN_RES...${NC}"
+        scale_image "$CHOSEN_WALLPAPER" "$TARGET_W" "$TARGET_H" "$BUNDLE_DIR/wallpaper.png"
 
         if [ -f "$DEPTH_MAP" ]; then
             echo -e "  [OK] Found matching 3D depth map."
-            scale_image_python "$DEPTH_MAP" "$TARGET_W" "$TARGET_H" "$BUNDLE_DIR/depth.png"
+            scale_image "$DEPTH_MAP" "$TARGET_W" "$TARGET_H" "$BUNDLE_DIR/depth.png"
         fi
 
         LIVELY_LIB_DIR="$LOCALAPPDATA/Lively Wallpaper/Library/wallpapers/3D_Spatial_Wallpaper"
@@ -246,7 +273,7 @@ if [[ "$wp_choice" =~ ^[0-9]+$ ]] && [ "$wp_choice" -ge 1 ] && [ "$wp_choice" -l
     TARGET_W="${RES%x*}"
     TARGET_H="${RES#*x}"
 
-    scale_image_python "$CHOSEN_WALLPAPER" "$TARGET_W" "$TARGET_H" "$HOME/Pictures/active_wallpaper.png"
+    scale_image "$CHOSEN_WALLPAPER" "$TARGET_W" "$TARGET_H" "$HOME/Pictures/active_wallpaper.png"
 
     backup_config "$HOME/.config/shiftpaper/config.toml"
     cp -f "$DOTFILES_DIR/shiftpaper/config.toml" "$HOME/.config/shiftpaper/config.toml"
