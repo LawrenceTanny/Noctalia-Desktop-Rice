@@ -1,5 +1,5 @@
 [daemon]
-parallax_intensity = 0.004
+parallax_intensity = 0.0055
 cursor_poll_hz = 60
 
 [inference]

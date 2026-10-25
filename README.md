@@ -1,117 +1,96 @@
-<div align="center">
+# 3D Spatial Parallax Wallpaper Setup
 
-# ⛩️ CachyOS + Wayland 3D Spatial Wallpaper
-### *Interactive 3D Mouse Parallax Wallpaper powered by Shiftpaper & MoGe-2*
-
-![OS](https://img.shields.io/badge/OS-CachyOS%20Linux-blue?style=for-the-badge&logo=archlinux)
-![Compositor](https://img.shields.io/badge/Compositor-Wayland%20(Niri%20/%20Hyprland%20/%20Sway)-teal?style=for-the-badge)
-![Engine](https://img.shields.io/badge/Engine-Shiftpaper%203D-purple?style=for-the-badge)
-![Model](https://img.shields.io/badge/Model-MoGe--2%20Metric%20Depth-orange?style=for-the-badge)
-
-</div>
+Interactive 3D spatial mouse-tilt wallpaper setup for Linux (Wayland) and Windows (10/11).
 
 ---
 
-## 🎬 Showcase
+## Overview
 
-https://github.com/user-attachments/assets/a0bbdce1-7f29-46b3-af2b-52f99c56efb3
+This setup generates metric 3D depth maps for wallpapers, creating a real-time perspective tilt reacting to your cursor movement at 60 FPS with low resource usage.
 
-<div align="center">
-  <p><i>Real-time 3D camera parallax perspective reacting to mouse movement on Wayland.</i></p>
-</div>
+### Platform Support
+* Linux (Wayland): Native OpenGL/Vulkan rendering on wlr-layer-shell via shiftpaper.
+* Windows (10/11): Hardware-accelerated WebGL depth shader via Lively Wallpaper.
 
----
-
-## ✨ Features & Highlights
-
-### 🌌 1. 3D Spatial Mouse Parallax Engine
-* **Engine:** Powered by [`shiftpaper`](https://github.com/CPritch/shiftpaper) with **MoGe-2** metric depth estimation.
-* **Smooth Camera Projection:** Configured with a tuned `parallax_intensity = 0.004` in `config.toml` for smooth, responsive 3D perspective tilting without blurry edge-stretching artifacts.
-* **Universal Wayland Compatibility:** Works out-of-the-box on any Wayland compositor supporting `wlr-layer-shell` (Niri, Hyprland, Sway, River, Wayfire, Labwc).
-* **Low Overhead:** Native OpenGL/Vulkan rendering on the `background` layer (~0% CPU, low VRAM).
-
-### 📐 2. Automatic Screen Resolution Scaling
-* **Zero Distortion:** Automatically detects your active monitor resolution from sysfs (e.g. 1600×900, 1080p, 1440p, 4K).
-* **Lanczos Resampling:** Scales and crops chosen wallpapers to match your screen resolution without stretching or quality loss.
-
-### 🖼️ 3. Curated GUWEIZ Wallpaper Collection
-Includes 5 dark fantasy and urban anime wallpapers by GUWEIZ ready to bake:
-1. `Image 1.jpg` - Katana in Moody Dark Mist
-2. `Image 2.png` - Urban Street with Headphones
-3. `Image 3.jpg` - Cyberpunk Girl in Rainy Neon City
-4. `Image 4.png` - Rainy Alleyway with Black Cat
-5. `Image 5.png` - Warrior Girl with Glowing Spear & Armor (Showcase Default)
+### Key Features
+* Auto-OS detection: Single installer detects Linux or Windows automatically.
+* Automatic screen resolution detection and Lanczos scaling.
+* Tuned parallax intensity preventing edge-stretching artifacts while preserving depth.
+* Includes 5 curated wallpapers by GUWEIZ with matching pre-baked 3D depth maps.
 
 ---
 
-## 🛠️ Requirements
+## Dependencies
 
-* **Wayland Compositor** (Niri, Hyprland, Sway, River, etc.)
-* **shiftpaper** (AUR: `shiftpaper` or `shiftpaper-git`)
-* **python** & **python-pillow** (for automated resolution scaling)
+### Linux (Wayland)
+* shiftpaper (AUR: `shiftpaper` or `shiftpaper-git`)
+* python & python-pillow
+
+### Windows (10/11)
+* Lively Wallpaper (Free & Open Source, installable via `winget`)
+* Git for Windows (to run Git Bash)
 
 ---
 
-## 📥 Installation
+## Installation
 
+### Linux
 ```bash
-# 1. Clone the repository
 git clone https://github.com/LawrenceTanny/Noctalia-Desktop-Rice.git ~/TannyRice
 cd ~/TannyRice
-
-# 2. Run the installer
 chmod +x install.sh
 ./install.sh
 ```
 
-The installer will:
-1. Detect your active display resolution.
-2. Check for dependencies and offer to install any missing packages via `paru`, `yay`, or `pacman`.
-3. Let you choose a wallpaper from the pack (or use your own).
-4. Scale the wallpaper to your resolution.
-5. Bake the 3D depth map with MoGe-2 and enable the background daemon (`shiftpaperd.service`).
+### Windows
+1. Open Git Bash in your terminal:
+```bash
+git clone https://github.com/LawrenceTanny/Noctalia-Desktop-Rice.git
+cd Noctalia-Desktop-Rice
+./install.sh
+```
+*(Or double-click `install.bat`)*
+
+The installer automatically detects whether you are on Linux or Windows:
+1. Detects your active screen resolution.
+2. Verifies dependencies and offers to install them automatically.
+3. Lets you pick your preferred wallpaper from the collection.
+4. Auto-scales the wallpaper and depth map to your screen resolution.
+5. Activates the 3D parallax spatial effect.
 
 ---
 
-## ⚙️ Manual Adjustments
+## Manual Usage
 
-To switch wallpapers at any time:
-
+### Linux (Wayland)
 ```bash
 shiftpaper set /path/to/your/image.png
 ```
 
-To adjust the 3D tilt strength, edit `~/.config/shiftpaper/config.toml`:
-
+To adjust 3D tilt strength, edit `~/.config/shiftpaper/config.toml`:
 ```toml
 [daemon]
-parallax_intensity = 0.004
+parallax_intensity = 0.0055
 cursor_poll_hz = 60
 ```
-
-Then reload the daemon:
-
+Reload daemon:
 ```bash
 pkill -HUP shiftpaperd
 ```
 
----
-
-## 🎨 Special Thanks & Artwork Credits
-
-A massive thank you and deep appreciation to **Zheng Wei Gu ([GUWEIZ](https://www.artstation.com/guweiz))** for creating the extraordinary, atmospheric dark fantasy and urban anime artwork featured in this project. 
-
-Please support the original artist across their platforms:
-
-* 🎨 **ArtStation:** [artstation.com/guweiz](https://www.artstation.com/guweiz)
-* 🐦 **X (Twitter):** [@ttguweiz](https://x.com/ttguweiz)
-* 📸 **Instagram:** [@guweiz](https://www.instagram.com/guweiz/)
-* 💖 **Patreon:** [patreon.com/guweiz](https://www.patreon.com/guweiz)
-* 🎬 **YouTube:** [@GUWEIZ](https://www.youtube.com/@GUWEIZ)
+### Windows
+To load in Lively Wallpaper manually:
+1. Open Lively Wallpaper.
+2. Drag and drop the `assets/lively-parallax` folder into Lively.
 
 ---
 
-## 📜 System & Open Source Credits
-* [Shiftpaper](https://github.com/CPritch/shiftpaper) by CPritch for the 3D depth-map parallax daemon.
-* [CachyOS Team](https://cachyos.org/) for the Linux kernel and Wayland gaming distribution.
-* [Wallhaven](https://wallhaven.cc/) community for wallpaper curation.
+## Special Thanks and Artwork Credits
+
+Artwork by Zheng Wei Gu (GUWEIZ). Please support the original artist:
+
+* ArtStation: https://www.artstation.com/guweiz
+* X (Twitter): https://x.com/ttguweiz
+* Instagram: https://www.instagram.com/guweiz/
+* Patreon: https://www.patreon.com/guweiz
+* YouTube: https://www.youtube.com/@GUWEIZ

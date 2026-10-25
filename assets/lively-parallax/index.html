@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>3D Spatial Wallpaper</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+  canvas { width: 100%; height: 100%; display: block; }
+</style>
+</head>
+<body>
+<canvas id="glcanvas"></canvas>
+<script>
+const canvas = document.getElementById('glcanvas');
+const gl = canvas.getContext('webgl');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+window.addEventListener('resize', resize);
+resize();
+
+const vsSource = `
+  attribute vec2 a_pos;
+  varying vec2 v_uv;
+  void main() {
+    v_uv = (a_pos + 1.0) * 0.5;
+    v_uv.y = 1.0 - v_uv.y;
+    gl_Position = vec4(a_pos, 0.0, 1.0);
+  }
+`;
+
+const fsSource = `
+  precision mediump float;
+  uniform sampler2D u_image;
+  uniform sampler2D u_depth;
+  uniform vec2 u_mouse;
+  uniform float u_intensity;
+  varying vec2 v_uv;
+  void main() {
+    float depth = texture2D(u_depth, v_uv).r;
+    vec2 offset = u_mouse * (depth - 0.5) * u_intensity;
+    gl_FragColor = texture2D(u_image, clamp(v_uv + offset, 0.0, 1.0));
+  }
+`;
+
+function createShader(gl, type, source) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, source);
+  gl.compileShader(s);
+  return s;
+}
+
+const prog = gl.createProgram();
+gl.attachShader(prog, createShader(gl, gl.VERTEX_SHADER, vsSource));
+gl.attachShader(prog, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
+gl.linkProgram(prog);
+gl.useProgram(prog);
+
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+  -1, -1,  1, -1, -1,  1,
+  -1,  1,  1, -1,  1,  1
+]), gl.STATIC_DRAW);
+
+const posLoc = gl.getAttribLocation(prog, 'a_pos');
+gl.enableVertexAttribArray(posLoc);
+gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+function loadTexture(gl, url, unit) {
+  const tex = gl.createTexture();
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    gl.activeTexture(gl.TEXTURE0 + unit);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    requestAnimationFrame(render);
+  };
+  img.src = url;
+  return tex;
+}
+
+loadTexture(gl, 'wallpaper.png', 0);
+loadTexture(gl, 'depth.png', 1);
+
+gl.uniform1i(gl.getUniformLocation(prog, 'u_image'), 0);
+gl.uniform1i(gl.getUniformLocation(prog, 'u_depth'), 1);
+const mouseLoc = gl.getUniformLocation(prog, 'u_mouse');
+const intLoc = gl.getUniformLocation(prog, 'u_intensity');
+gl.uniform1f(intLoc, 0.015);
+
+let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+
+window.addEventListener('mousemove', (e) => {
+  targetX = (e.clientX / window.innerWidth - 0.5) * 2.0;
+  targetY = (e.clientY / window.innerHeight - 0.5) * 2.0;
+});
+
+function render() {
+  currentX += (targetX - currentX) * 0.08;
+  currentY += (targetY - currentY) * 0.08;
+  gl.uniform2f(mouseLoc, currentX, currentY);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  requestAnimationFrame(render);
+}
+render();
+</script>
+</body>
+</html>

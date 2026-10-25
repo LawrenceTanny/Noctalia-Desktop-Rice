@@ -1,0 +1,11 @@
+{
+  "AppVersion": "2.0.0.0",
+  "Title": "3D Spatial Parallax Wallpaper",
+  "Thumbnail": "wallpaper.png",
+  "Preview": "wallpaper.png",
+  "Desc": "3D mouse-tilt spatial parallax wallpaper",
+  "Author": "LawrenceTanny",
+  "License": "MIT",
+  "Type": 1,
+  "FileName": "index.html"
+}
