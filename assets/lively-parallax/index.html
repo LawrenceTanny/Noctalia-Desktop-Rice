@@ -74,7 +74,6 @@ gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 function loadTexture(gl, url, unit) {
   const tex = gl.createTexture();
   const img = new Image();
-  img.crossOrigin = 'anonymous';
   img.onload = () => {
     gl.activeTexture(gl.TEXTURE0 + unit);
     gl.bindTexture(gl.TEXTURE_2D, tex);
